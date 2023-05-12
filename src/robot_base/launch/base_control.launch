@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 
 <launch>
-    <node name="motor" pkg="robot_base" type="motor" output="screen" >
+    <node name="motor" pkg="robot_base" type="motor" output="screen" respawn="true">
         <param name="PortName" value="/dev/ttyACM0" />
         <param name="control_topic" value="/cmd_vel"/>
         <param name="chassis_status_topic" value="/robot/chassis_status"/>
     </node>
     <node name="info_process" pkg="robot_base" type="info_process" output="screen" />
     <node name="send_control" pkg="robot_base" type="send_control" output="screen" />
+    <node name="send_aim" pkg="robot_base" type="send_aim" output="screen" />
 
 </launch>

@@ -10,6 +10,7 @@ void serialDataCallback(const std_msgs::String::ConstPtr &msg) {
 
     if (allow_aim) {
         serial_pub.publish(msg);
+        ROS_INFO("Aim to motor pub");
     }
 }
 
@@ -17,11 +18,10 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "serial_pub_sub");
 
     ros::NodeHandle nh;
-    ros::Publisher serial_pub = nh.advertise<std_msgs::String>("/serial_data/write", 64);
-    // create subscriber object for serial data
+    serial_pub = nh.advertise<std_msgs::String>("serial_data/write", 100); // create publisher object for serial data
 
-    ros::Subscriber serial_sub = nh.subscribe<std_msgs::String>("/cmd_aim", 64,
-                                                                &serialDataCallback);
+    // create subscriber object for serial data
+    ros::Subscriber serial_sub = nh.subscribe<std_msgs::String>("/cmd_aim", 64, serialDataCallback);
     ros::spin();
     return 0;
 }

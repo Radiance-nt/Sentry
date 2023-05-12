@@ -2,11 +2,8 @@
 #include <serial/serial.h>
 #include <iostream>
 #include "control/crc_m.h"
-#include <std_msgs/Float32MultiArray.h>
 #include <std_msgs/Float32.h>
-#include <sensor_msgs/Range.h>
 #include <geometry_msgs/TwistStamped.h>
-#include <thread>
 #include <std_msgs/String.h>
 #include "HandlerUtils.hpp"
 #include "msgExample.h"
@@ -99,20 +96,20 @@ int main(int argc, char **argv) {
         //std::cout<< SPEED<<" "<<std::endl;
         // 编码控制指令
         control_coding(SPEEDX, SPEEDY, ANGLE);
-
+//
 //        printf("data:\n");
 //        for (int i = 0; i < 14; i++) {
 //            printf("%x ", (unsigned char) code.usbDataBuffer[i]);
 //        }
-        printf("\n");
+//        printf("\n");
 
         bool allow_rotate, allow_hitBack;
         ros::param::get("/RobotControl/allow_rotate", allow_rotate);
         ros::param::get("/RobotControl/allow_hitBack", allow_hitBack);
-        aimData aim_data{.allow_rotate =  allow_rotate,
-                .allow_hitBack = allow_hitBack};
+        aimData aim_data{};
         std::memcpy(aim_data.aim, reinterpret_cast<char *>(code.usbDataBuffer), 14);
-
+        aim_data.allow_rotate = allow_rotate;
+        aim_data.allow_hitBack = allow_hitBack;
         auto data = serialize<aimData>(aim_data);
         std_msgs::String msg;
         msg.data = std::string(data, sizeof(aimData));
