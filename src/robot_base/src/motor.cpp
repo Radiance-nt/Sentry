@@ -1,3 +1,4 @@
+#define  WRITE_SIZE 64
 #include <ros/ros.h>
 #include <serial/serial.h>
 #include <iostream>
@@ -60,12 +61,9 @@ int open_port() {
 void writeSerialCallback(const std_msgs::String::ConstPtr &msg) {
 
     try {
-        printf("\n[Motor] data write: ");
-        for (int i = 0; i < 14; i++) {
-            printf("%x ", (unsigned char) msg->data.c_str()[i]);
-        }
+        printf("\n[Motor] data write: %x", (unsigned char) msg->data.c_str()[0]);
 
-        sp.write(reinterpret_cast<const uint8_t *>(msg->data.c_str()), 14);
+        sp.write(reinterpret_cast<const uint8_t *>(msg->data.c_str()), WRITE_SIZE);
     } catch (serial::IOException &e) {
         sp.close();
         open_port();
