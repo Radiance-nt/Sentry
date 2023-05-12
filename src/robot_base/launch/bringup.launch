@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<launch>
+  
+  <!-- 机器人实物启动 -->
+  
+  <!-- 启动底盘 -->
+  <include file="$(find robot_base)/launch/base_control.launch" />
+  
+  <!-- static TF -->
+  <include file="$(find robot_base)/launch/static_tf.launch"/>
+  
+  <!-- 机器人实物启动 -->
+
+</launch>

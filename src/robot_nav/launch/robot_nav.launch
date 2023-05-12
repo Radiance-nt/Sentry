@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="map" default="mymap.yaml" />
+  <node name="map_server_3d" pkg="map_server" type="map_server" args="$(find fast_lio)/maps/$(arg map)">
+      <param name="frame_id" value="map_3d" />
+      <remap from="map" to="map_3d"/>
+  </node>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find fast_lio)/maps/map.yaml">
+  </node>
+
+  <node name="map_server_2d" pkg="map_server" type="map_server" args="$(find fast_lio)/maps/map.yaml">
+      <param name="frame_id" value="map_3d" />
+      <remap from="map" to="map_2d"/>
+  </node>
+
+  <node name="map_server_filter" pkg="map_server" type="map_server" args="$(find fast_lio)/maps/filter.yaml">
+      <remap from="map" to="filter_map"/>
+  </node>
+
+  <node name="lidar_filter" pkg="lidar_filter" type="lidar_filter" output="screen">
+<!--&lt;!&ndash;    <param name="stl_path" value="$(find vehicle_simulator)/world/base_link.stl" />&ndash;&gt;-->
+   </node>
+
+      <!-- 机器人实物启动 -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">
+<!--        <remap from="cloud_in" to="/cloud_registered"/>-->
+        <rosparam>
+            #target_frame: camera_link # Leave disabled to output scan in pointcloud frame
+            transform_tolerance: 0.01
+            min_height: -0.8
+            max_height: 1.0
+
+            angle_min: -3.1415926 # -M_PI
+            angle_max: 3.1415926 # M_PI
+            angle_increment: 0.003 # 0.17degree
+            scan_time: 0.1
+            range_min: 0.2
+            range_max: 100
+            use_inf: true
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>
+    </node>
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+    <rosparam file="$(find robot_nav)/yaml/costmap_common_params.yaml" command="load" ns="global_costmap" />
+
+    <rosparam file="$(find robot_nav)/yaml/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+    <rosparam file="$(find robot_nav)/yaml/global_costmap_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/local_costmap_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/dwa_local_planner_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/global_planner_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/move_base_params.yaml" command="load" />
+
+  </node>
+
+  <arg name="rviz" default="true" />
+
+  <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find robot_nav)/rviz/default.rviz" />
+  </group>
+
+
+</launch>
+
+

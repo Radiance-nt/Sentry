@@ -1,0 +1,4 @@
+<launch>
+<!--    <node pkg="robot_strategy" type="controler.py" name="control" output="screen"/>-->
+
+</launch>

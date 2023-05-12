@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<!--deprecated !-->
+
+<launch>
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+    <rosparam file="$(find robot_nav)/yaml/costmap_common_params.yaml" command="load" ns="global_costmap" />
+
+    <rosparam file="$(find robot_nav)/yaml/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+    <rosparam file="$(find robot_nav)/yaml/dynamic_global_costmap_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/local_costmap_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/dwa_local_planner_params.yaml" command="load" />
+    
+    <rosparam file="$(find robot_nav)/yaml/global_planner_params.yaml" command="load" />
+
+    <rosparam file="$(find robot_nav)/yaml/move_base_params.yaml" command="load" />
+    
+  </node>
+
+</launch>
+
+

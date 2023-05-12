@@ -1,0 +1,53 @@
+DWAPlannerROS:
+  # 机器人参数
+  acc_lim_x: 1.2 # 机器人的 x 加速度极限
+  acc_lim_y: 1.2 # 机器人的 y 加速度极限
+  acc_lim_th: 50 # 机器人的旋转加速度极限
+
+  max_vel_trans: 5 # 机器人最大平移速度的绝对值
+  min_vel_trans: 0 # 机器人最小平移速度的绝对值
+
+  max_vel_x: 5 # 机器人的最大 x 速度
+  min_vel_x: 0 # 机器人的最小 x 速度
+
+  max_vel_y: 0.8 # 机器人的最大 y 速度
+  min_vel_y: -0.8 # 机器人的最小 y 速度
+
+  max_rot_vel: 20  # 机器人最大旋转速度的绝对值
+  min_rot_vel: 0.2 # 机器人最小旋转速度的绝对值
+
+  # 目标容差参数
+  yaw_goal_tolerance: 0.25
+  xy_goal_tolerance: 0.25
+  latch_xy_goal_tolerance: true # 允许到达目标点后超出目标公差
+
+  # 前瞻预测参数
+  sim_time: 2 # 前向模拟轨迹的时间量
+  sim_granularity: 0.025 # 轨迹上各点之间的步长
+
+  vx_samples: 5 # 探索 x 速度空间时要使用的样本数
+  vy_samples: 5 # 探索 y 速度空间时要使用的样本数
+  vth_samples: 10 # 探索θ速度空间时使用的样本数量
+
+  # controller_frequency 控制频率，与movebase一同使用时不设置
+
+  # 轨迹评分参数
+  path_distance_bias: 10 # 控制器应保持接近给定路径的程度的权重
+  goal_distance_bias: 24.0 # 控制器应尝试达到其本地目标的权重
+  occdist_scale: 0.05 # 控制器应尝试避开障碍物的权重
+
+  # forward_point_distance 从机器人中心点到放置额外得分点的距离
+
+  # stop_time_buffer 机器人刹车时间
+
+  # scaling_speed 速度缩放
+
+  # max_scaling_factor 机器人占地面积膨胀因子
+
+  # publish_cost_grid 是否发布代价网格
+  oscillation_reset_dist: 1
+  # 防振荡参数
+  # oscillation_reset_dist 不知是否与movebase设置冲突
+
+  # 全局计划参数
+  # prune_plane 是否消除已完成路径

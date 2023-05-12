@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="livox_horizon">
+
+  <xacro:property name="M_PI" value="3.1415926"/> 
+  <xacro:property name="laser_min_range" value="0.01"/>
+  <xacro:property name="laser_max_range" value="200.0"/>
+  <xacro:property name="horizontal_fov_lower_boundary" value="0.0"/>
+  <xacro:property name="horizontal_fov_upper_boundary" value="360.0"/>
+  <xacro:property name="vertical_fov_lower_boundary" value="37.8"/>
+  <xacro:property name="vertical_fov_upper_boundary" value="97.3"/>
+  <xacro:property name="samples" value="20000"/>
+  <xacro:property name="downsample" value="1"/>
+
+  <xacro:macro name="null_inertial">
+    <inertial>
+      <mass value="0"/>
+    <inertia ixx="0.0" ixy="0" ixz="0"
+          iyy="0.0" iyz="0"
+          izz="0.0"/>
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="Livox_Mid_gazebo_sensor" params="
+  visualize:=True 
+  update_rate:=10 
+  samples:=20000
+  lasers:=4
+  resolution:=0.002 
+  noise_mean:=0.0 
+  noise_stddev:=0.01 
+  name:=livox">
+    <!-- reference should be existing link ! -->
+    <gazebo reference="${name}">
+      <sensor type="ray" name="laser_livox">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <update_rate>10</update_rate>
+        <!-- This ray plgin is only for visualization. -->
+        <plugin name="gazebo_ros_laser_controller" filename="liblivox_laser_simulation.so">
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${samples}</samples>
+                <resolution>1</resolution>
+                <min_angle>${horizontal_fov_lower_boundary/360*M_PI}</min_angle>
+                <max_angle>${horizontal_fov_upper_boundary/360*M_PI}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>${lasers}</samples>
+                <resolution>1</resolution>
+                <min_angle>${vertical_fov_lower_boundary/360*M_PI}</min_angle>
+                <max_angle>${vertical_fov_upper_boundary/360*M_PI}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+            <min>${laser_min_range}</min>
+            <max>${laser_max_range}</max>
+            <resolution>${resolution}</resolution>
+            </range>
+            <noise>
+            <type>gaussian</type>
+            <mean>${noise_mean}</mean>
+            <stddev>${noise_stddev}</stddev>
+            </noise>
+          </ray>
+          <visualize>false</visualize>
+          <samples>${samples}</samples>
+          <downsample>${downsample}</downsample>
+          <csv_file_name>package://livox_laser_simulation/scan_mode/mini360.csv</csv_file_name>
+          <ros_topic>livox_horizon_points</ros_topic>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="Livox_HORIZON" params="*origin visualize:=false name:=livox_horizon">
+    <link name="${name}">
+      <xacro:null_inertial/>
+      <visual> 
+        <origin xyz="0.00 0.00 0.1" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://livox_laser_simulation/meshes/livox_mid40.dae">
+          </mesh>
+        </geometry>
+      </visual>
+
+      <collision>
+		  <origin xyz="0 0 0" rpy="0 0 0" /> <geometry> <mesh 
+		  filename="package://livox_laser_simulation/meshes/livox_mid40.dae"> 
+		  </mesh> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${name}_to_lidar_holder_joint" type="fixed">
+      <parent link="lidar"/>
+      <child link="${name}"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- gazebo plugin package -->
+    <xacro:Livox_Mid_gazebo_sensor name="${name}" visualize="${visualize}"/>
+  </xacro:macro>
+
+  <xacro:Livox_HORIZON name="livox_horizon">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </xacro:Livox_HORIZON>
+
+</robot>

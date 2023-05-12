@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.0-0-g9aa0fdb  Build Version: 1.5.7004.21443
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="xju" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find vehicle_simulator)/urdf/sentry.gazebo.xacro"/>
+  <xacro:include filename="$(find vehicle_simulator)/urdf/livox_lidar.urdf.xacro"/>
+  <xacro:include filename="$(find vehicle_simulator)/urdf/mecanum_base.xacro" />
+  <xacro:mecanum_base/>
+  <xacro:include filename="$(find vehicle_simulator)/urdf/base_drive.gazebo" />
+  <xacro:base_mecanum_gazebo/>
+  <!-- Body -->
+
+
+  <!-- Imu -->
+  <link name="imu_link"/>
+  <joint
+    name="joint_imu"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="lidar_link" />
+    <child
+      link="imu_link" />
+    <axis
+      xyz="0 0 0" />
+    <safety_controller
+      k_velocity="0" />
+  </joint>
+
+  <!-- Lidar -->
+<!--  <link name="laser_link">-->
+<!--    <visual>-->
+<!--      <origin-->
+<!--        xyz="0 0 0"-->
+<!--        rpy="0 0 0" />-->
+<!--      <geometry>-->
+<!--        <cylinder length="0.02" radius="0.01" />-->
+<!--      </geometry>-->
+<!--      <material name="red" />-->
+<!--    </visual>-->
+<!--  </link>-->
+<!--  <joint-->
+<!--    name="joint_ladar"-->
+<!--    type="fixed">-->
+<!--    <origin-->
+<!--      xyz="0.29 0 -0.01"-->
+<!--      rpy="0 0 0" />-->
+<!--    <parent-->
+<!--      link="base_link" />-->
+<!--    <child-->
+<!--      link="laser_link" />-->
+<!--    <axis-->
+<!--      xyz="0 0 0" />-->
+<!--    <safety_controller-->
+<!--      k_velocity="0" />-->
+<!--  </joint>-->
+
+  <joint
+    name="lidar_link_2_base"
+    type="fixed">
+    <origin
+      xyz="0.3 0 0.5"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="lidar_link" />
+    <axis
+      xyz="0 0 0" />
+    <safety_controller
+      k_velocity="0" />
+  </joint>
+
+    <link name="laser_livox_mini360"/>
+    <joint
+    name="laser_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="livox_mini360" />
+    <child
+      link="laser_livox_mini360" />
+    <axis
+      xyz="0 0 0" />
+    <safety_controller
+      k_velocity="0" />
+  </joint>
+
+
+<!--  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>-->
+<!--  <xacro:VLP-16 parent="base_link" name="velodyne" topic="/velodyne_points"  hz="10" samples="440">-->
+<!--  <origin xyz="0 0 0.4" rpy="0 0 0" />-->
+<!--  </xacro:VLP-16>-->
+
+</robot>

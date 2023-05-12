@@ -1,0 +1,12 @@
+obstacle_range: 2.5 #  传感器最大读取距离
+raytrace_range: 3.0 # costmap清理距离，与movebase一起使用时可能冲突
+footprint: [[0.2, -0.2], [0.2, 0.2], [-0.2, 0.2], [-0.2, -0.2]]
+footprint_padding: 0.2
+#robot_radius: 0.4 # 圆形机器人大小设置
+#inflation_radius: 0.2 # 膨胀半径
+
+transform_tolerance: 0.2
+
+observation_sources: point_cloud_sensor
+
+point_cloud_sensor: {sensor_frame: lidar_link, data_type: LaserScan, topic: /scan, marking: true, clearing: true}

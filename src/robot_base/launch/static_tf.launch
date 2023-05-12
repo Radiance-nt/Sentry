@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="body2lidar"
+          args=" 0.0 0.0 0.0 0.0 0.0 0.0 base_link lidar_link "/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="livox"
+          args=" 0.0 0.0 0.0 0.0 0.0 0.0 lidar_link livox_mini360 "/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="laser"
+          args=" 0.0 0.0 0.0 0.0 0.0 0.0 livox_mini360 laser_livox_mini360 "/>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="body2imu"
+          args="0.0 0.0 0.0 0.0 0.0 0.0 base_link imu_link "/>
+
+</launch>

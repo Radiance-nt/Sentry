@@ -1,0 +1,6 @@
+<launch>
+    <param name="RobotStatus/health" type="int" value="700"/>
+    <param name="RobotStatus/remainTime" type="int" value="500"/>
+    <param name="RobotStatus/ok" type="bool" value="true"/>
+
+</launch>

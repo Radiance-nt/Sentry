@@ -1,0 +1,21 @@
+GlobalPlanner:
+
+  default_tolerance: 0.5  # 当设置的目的地被障碍物占据时,需要以该参数为半径寻找到最近的点作为新目的地点
+
+  visualize_potential: false # 是否显示从PointCloud2计算得到的势区域
+
+  use_dijkstra: true # 设置为true,将使用dijkstra算法,否则使用A*算法
+
+  use_quadratic: true # 设置为true,将使用二次函数近似函数,否则使用更加简单的计算方式,这样节省硬件计算资源
+
+  use_grid_path: false # 如果设置为true,则规划沿着网格边界的路径,否则将使用梯度下降算法,路径更为光滑点
+
+  old_navfn_behavior: false
+
+  lethal_cost: 253 # 致命代价值,默认是设置为253
+
+  neutral_cost: 50 # 中等代价值,默认设置是50
+
+  cost_factor: 3 # 代价地图与每个代价值相乘的因子
+
+

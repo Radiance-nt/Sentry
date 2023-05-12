@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="livox_lidar">
+
+	<!-- Constants --> 
+    <xacro:property name="M_PI" value="3.1415926"/> 
+
+	<!-- inertial matrix --> 
+	<xacro:macro name="inertial_matrix" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia ixx="0" ixy="0.0" ixz="0.0" iyy="0" iyz="0.0" izz="0" />
+        </inertial>
+    </xacro:macro>
+
+	<xacro:macro name="link_oasis" params="*origin name:=oasis parent:=lidar">
+        <joint name="oasis_300_to_base_link_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="oasis_300"/>
+            <origin xyz="0.00 0 0.0" rpy="0 0 0"/>
+        </joint>
+
+        <!-- platform for -->
+        <link name="oasis_300">
+            <visual>
+                <origin xyz="0.00 0 0.05" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://livox_laser_simulation/meshes/standardrobots.STL"/>
+                </geometry>
+            </visual>
+
+            <collision>
+                <origin xyz="0.00 0 0.05" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://livox_laser_simulation/meshes/standardrobots.STL"/>
+                </geometry>
+            </collision>
+
+            <xacro:inertial_matrix mass="0"/>
+            <kinematic>1</kinematic>
+            <!-- <gravity>9.8</gravity> -->
+        </link>
+        
+        <gazebo reference="oasis_300">
+            <material>Gazebo/Green</material>
+        </gazebo>
+
+    </xacro:macro>
+</robot>

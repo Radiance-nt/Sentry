@@ -1,0 +1,41 @@
+<robot name="my_base" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:property name="PI" value="3.1415926"/>
+    <xacro:property name="base_link_radius" value="0.05" />
+    <xacro:property name="base_link_length" value="0.01" /> 
+    <xacro:property name="base_link_m" value="0.00001" /> 
+
+    <link name="lidar_link" />
+
+    <link name="platform_base">
+      <visual>
+        <geometry>
+          <cylinder radius="${base_link_radius}" length="${base_link_length}" />
+        </geometry>
+        <origin xyz="0 0 -0.25" rpy="0 0 0" />
+        <material name="yellow">
+          <color rgba="0.5 0.3 0.0 0.5" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${base_link_radius}" length="${base_link_length}" />
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </collision>
+      <xacro:cylinder_inertial_matrix m="${base_link_m}" r="${base_link_radius}" h="${base_link_length}" />
+    </link>
+
+
+    <joint name="base_link2base_footprint" type="fixed">
+      <parent link="lidar_link" />
+      <child link="platform_base" />
+      <origin xyz="0 0 0.01" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="platform_base">
+        <material>Gazebo/Green</material>
+    </gazebo>
+
+
+</robot>

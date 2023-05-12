@@ -1,0 +1,16 @@
+local_costmap:
+  global_frame: camera_init
+  robot_base_frame: base_link
+  static_map: false
+  rolling_window: true
+  update_frequency: 5.0
+  publish_frequency: 5.0
+  width: 6.0
+  height: 6.0
+  resolution: 0.05
+#  robot_radius: 0.35
+  inflation_radius: 0.3 # 膨胀半径
+
+#  obstacle_layer:
+#    footprint_clearing_enabled: true
+

@@ -1,0 +1,10 @@
+<launch>
+  <node name="map_tf" pkg="map_tf" type="map_tf.py" output="screen">
+    <param name="x" value="24.0" />
+    <param name="y" value="7.0" />
+    <param name="z" value="0.0" />
+    <param name="roll" value="0.0" />
+    <param name="pitch" value="0.0" />
+    <param name="yaw" value="1.680" />
+  </node>
+</launch>

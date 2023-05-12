@@ -1,0 +1,51 @@
+<launch>
+
+  <include file="$(find vehicle_simulator)/launch/pseudo_params.launch"/>
+
+
+    <arg name="world_name" default="myrm"/>
+
+    <arg name="x_pos" default="7.0"/>
+    <arg name="y_pos" default="4.0"/>
+    <arg name="z_pos" default="0.171"/>
+
+
+    <arg name="vehicleHeight" default="0.5"/>
+    <arg name="cameraOffsetZ" default="0"/>
+
+    <!-- vehicle init position -->
+    <arg name="vehicleX" default="0"/>
+    <arg name="vehicleY" default="0"/>
+
+    <arg name="terrainZ" default="0"/>
+    <arg name="vehicleYaw" default="0"/>
+    <arg name="gazebo_gui" default="true"/>
+    <arg name="checkTerrainConn" default="false"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find vehicle_simulator)/world/myrm.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+    <!--robot-->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find vehicle_simulator)/urdf/sentry.urdf.xacro'"/>
+    <!--    <param name="robot_description"-->
+    <!--           command="$(find xacro)/xacro &#45;&#45;inorder '$(find vehicle_simulator)/urdf/robot.urdf.xacro'"/>-->
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="50.0"/>
+    </node>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="use_gui" value="false"/>
+    </node>
+
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_robot"
+          args="-urdf -model robot -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param /robot_description ">
+    </node>
+
+
+</launch>

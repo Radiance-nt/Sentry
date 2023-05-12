@@ -1,0 +1,7 @@
+image: /home/radiance/robomaster/simulation/src/robot_slam/FAST_LIO/maps/mymap.pgm
+resolution: 0.050000
+origin: [-4.671019, -4.112868, 0.000000]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+
