@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- 3D转2D -->
+  
+  <include file="$(find pcd2pgm)/launch/run.launch" />
+
+  <!-- 3D转2D -->
+
+  <!-- 存储2Dmap -->
+
+  <arg name="filename" value="$(find fast_lio)/maps/mymap" />
+  <node name="map_save" pkg="map_server" type="map_saver" args="-f $(arg filename)" />
+
+  <!-- 存储2Dmap -->
+</launch>
