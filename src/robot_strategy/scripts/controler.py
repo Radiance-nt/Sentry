@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# coding=utf-8
+
 import itertools
 import threading
 import time
@@ -8,19 +10,38 @@ import rospy
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
-from config.state import State
-import config.nav_points as nav_points
 from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped
+
+
+from enum import Enum
+
+
+class State(Enum):
+    WAIT = 1
+    NAV_FORWARD = 2
+    NAV_HOME = 3
+    OUT_OF_BULLET = 6
+
+p1 = [
+    25.43716049194336,
+    9.5605181455612183,
+    0.0,
+    0.0,
+    0.0,
+    0.992779931742495,
+    0.1391848154572246,
+]
+
+points = [p1]
 
 """
 TODO: 在send_control节点中，
-
 """
 ok_ = False
 
 
 class RobotController:
-    def __init__(self, points: List):
+    def __init__(self, points):
         rospy.init_node('robot_controller', anonymous=True)
 
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -186,13 +207,13 @@ def setparam(param, value):
 
 
 def init_jump_table(jump_table):
-    def WAIT2NAV_FORWARD(self: RobotController):
+    def WAIT2NAV_FORWARD(self):
         rospy.loginfo("[Jump] From WAIT Switch to NAV_FORWARD")
 
     jump_table[(State.WAIT, State.NAV_FORWARD)] = WAIT2NAV_FORWARD
 
 
 if __name__ == '__main__':
-    points = [Pose(Point(a, b, c), Quaternion(d, e, f, g)) for (a, b, c, d, e, f, g) in nav_points.points]
+    points = [Pose(Point(a, b, c), Quaternion(d, e, f, g)) for (a, b, c, d, e, f, g) in points]
     controller = RobotController(points)
     controller.run()

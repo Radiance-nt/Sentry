@@ -1,4 +1,5 @@
 <launch>
-<!--    <node pkg="robot_strategy" type="controler.py" name="control" output="screen"/>-->
+    <node pkg="robot_strategy" type="controler.py" name="control" output="screen"/>
+    <param name="RobotStatus/ok" type="bool" value="true"/>
 
 </launch>
