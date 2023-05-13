@@ -1,6 +1,6 @@
 
 
-## 设置ros远程连接
+## 设置ros远程连接 (PC上)
 #### 添加hosts
 打开/etc/hosts，添加下面这一行
 192.168.2.100	xjturm-NUC
@@ -27,7 +27,7 @@ roslaunch rviz.launch
     cd $(rospack find robot_nav)/launch
     roslaunch rviz.launch"
 
-## 运行
+## 运行机器人程序 (NUC上)
 
 #### 启动雷达和底盘
 ./lidar.sh
