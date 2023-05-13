@@ -1,6 +1,6 @@
 
 
-## 设置ros远程连接 (PC上)
+## 设置ros远程连接 (on PC)
 #### 添加hosts
 打开/etc/hosts，添加下面这一行
 192.168.2.100	xjturm-NUC
@@ -27,7 +27,7 @@ roslaunch rviz.launch
     cd $(rospack find robot_nav)/launch
     roslaunch rviz.launch"
 
-## 运行机器人程序 (NUC上)
+## 运行机器人程序 (on NUC)
 
 #### 启动雷达和底盘
 ./lidar.sh
@@ -47,6 +47,10 @@ save_map将刚刚保存的3维地图转化为2维地图, ctrl+c关闭save_map程
 将车开回**初始点**
 ./slam.sh
 ./nav.sh
+
+#### 地图对齐（非运行必须）
+根据pc上rviz的可视化修正map2d(frame: map)到map3d(frame: map_3d)的tf
+rosparam set /map_tf/...
 
 此时可以通过pc上的 rviz.launch看到机器人状态
 
