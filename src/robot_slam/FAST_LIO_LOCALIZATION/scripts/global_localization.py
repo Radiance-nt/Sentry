@@ -1,12 +1,9 @@
-#!/home/radiance/miniconda3/envs/ros/bin/python
-
+#!/usr/bin/env python2
 # coding=utf8
 from __future__ import print_function, division, absolute_import
 
 import copy
-import sys
-if(sys.version[:1] == "3"):import _thread as thread
-else:import thread
+import thread
 import time
 
 import open3d as o3d
@@ -43,11 +40,11 @@ def msg_to_array(pc_msg):
 
 
 def registration_at_scale(pc_scan, pc_map, initial, scale):
-    result_icp = o3d.pipelines.registration.registration_icp(
+    result_icp = o3d.registration.registration_icp(
         voxel_down_sample(pc_scan, SCAN_VOXEL_SIZE * scale), voxel_down_sample(pc_map, MAP_VOXEL_SIZE * scale),
         1.0 * scale, initial,
-        o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=20)
+        o3d.registration.TransformationEstimationPointToPoint(),
+        o3d.registration.ICPConvergenceCriteria(max_iteration=20)
     )
 
     return result_icp.transformation, result_icp.fitness
@@ -226,7 +223,7 @@ if __name__ == '__main__':
 
     # The threshold of global localization,
     # only those scan2map-matching with higher fitness than LOCALIZATION_TH will be taken
-    LOCALIZATION_TH = 0.9
+    LOCALIZATION_TH = 0.93
 
     # FOV(rad), modify this according to your LiDAR type
     FOV = 3.14 * 2
@@ -285,7 +282,7 @@ if __name__ == '__main__':
             initialized = global_localization(initial_pose)
         else:
             rospy.logwarn('First scan not received!!!!!')
-            time.sleep(1)
+            time.sleep(0.2)
 
     rospy.loginfo('')
     rospy.loginfo('Initialize successfully!!!!!!')
