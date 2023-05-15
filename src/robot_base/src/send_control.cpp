@@ -39,7 +39,7 @@ void control_callback(const geometry_msgs::Twist::ConstPtr &msg) {
 void control_coding(const float SpeedX, const float SpeedY, const float Angle) {
     // /* code */
     bool allow_aim;
-    ros::param::get("/RobotControl/allow_aim", allow_aim);
+    ros::param::get("/RobotControl/allow_nav", allow_aim);
 
     code.ctrlFromPC.markHead = 0x5e;
     code.ctrlFromPC.markTail = 0x71;

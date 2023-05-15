@@ -61,8 +61,10 @@ int open_port() {
 void writeSerialCallback(const std_msgs::String::ConstPtr &msg) {
 
     try {
-        printf("\n[Motor] data write: %x", (unsigned char) msg->data.c_str()[0]);
-
+        printf("\n[Motor] data write: %x ", (unsigned char) msg->data.c_str()[0]);
+        for (int i = 1; i < 64 ; i++) {
+            printf("%x ", (unsigned char) msg->data.c_str()[i]);
+        }
         sp.write(reinterpret_cast<const uint8_t *>(msg->data.c_str()), WRITE_SIZE);
     } catch (serial::IOException &e) {
         sp.close();
@@ -84,10 +86,10 @@ void readSerial() {
                 // publish the data to the topic
                 std_msgs::String msg;
                 msg.data = data_read;
-                printf("\n[Motor] Read from motor:\n");
-                for (int i = 0; i < 64 ; i++) {
-                    printf("%x ", data_read[i]);
-                }
+//                printf("\n[Motor] Read from motor:\n");
+//                for (int i = 0; i < 64 ; i++) {
+//                    printf("%x ", data_read[i]);
+//                }
                 serial_pub.publish(msg);
             }
         } catch (serial::IOException &e) {
