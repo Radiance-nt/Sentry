@@ -43,9 +43,9 @@ def transform_fusion():
         else:
             T_map3d_to_odom = np.eye(4)
 
-        timestamp = rospy.Time.now() + rospy.Duration(0.2)
-        if cur_map_to_odom is not None:
-            timestamp = cur_map_to_odom.header.stamp
+        timestamp = rospy.Time.now() + rospy.Duration(0.3)
+        # if cur_map_to_odom is not None:
+        #     timestamp = cur_map_to_odom.header.stamp
 
         br.sendTransform(tf.transformations.translation_from_matrix(T_map3d_to_odom),
                          tf.transformations.quaternion_from_matrix(T_map3d_to_odom),
