@@ -49,6 +49,9 @@
         </rosparam>
     </node>
 
+
+  <node name="goal_delayer" pkg="robot_nav" type="goal_delayer.py" output="screen"/>
+
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
     <rosparam file="$(find robot_nav)/yaml/costmap_common_params.yaml" command="load" ns="global_costmap" />
 
