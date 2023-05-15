@@ -29,7 +29,7 @@ if __name__ == '__main__':
     initial_pose = PoseWithCovarianceStamped()
     initial_pose.pose.pose = Pose(Point(*xyz), Quaternion(*quat))
     initial_pose.header.stamp = rospy.Time().now()
-    initial_pose.header.frame_id = 'map'
+    initial_pose.header.frame_id = 'map_3d'
     rospy.sleep(1)
     rospy.loginfo('Initial Pose: {} {} {} {} {} {}'.format(
         args.x, args.y, args.z, args.yaw, args.pitch, args.roll, ))

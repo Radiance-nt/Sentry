@@ -43,10 +43,14 @@ def transform_fusion():
         else:
             T_map3d_to_odom = np.eye(4)
 
+        timestamp = rospy.Time.now() + rospy.Duration(0.2)
+        if cur_map_to_odom is not None:
+            timestamp = cur_map_to_odom.header.stamp
 
         br.sendTransform(tf.transformations.translation_from_matrix(T_map3d_to_odom),
                          tf.transformations.quaternion_from_matrix(T_map3d_to_odom),
-                         rospy.Time.now() + rospy.Duration(0.2),
+                         # rospy.Time.now() + rospy.Duration(0.2),
+                         timestamp,
                          'camera_init', 'map_3d')
 
         # if cur_odom is not None:
@@ -79,13 +83,13 @@ def cb_save_map_to_odom(odom_msg):
 
 if __name__ == '__main__':
     # tf and localization publishing frequency (HZ)
-    FREQ_PUB_LOCALIZATION = 50
+    FREQ_PUB_LOCALIZATION = 10
 
     rospy.init_node('transform_fusion')
     rospy.loginfo('Transform Fusion Node Inited...')
 
     rospy.Subscriber('/Odometry', Odometry, cb_save_cur_odom, queue_size=1)
-    rospy.Subscriber('/map_to_odom', Odometry, cb_save_map_to_odom, queue_size=1)
+    rospy.Subscriber('/map3d_to_odom', Odometry, cb_save_map_to_odom, queue_size=1)
 
     pub_localization = rospy.Publisher('/localization', Odometry, queue_size=1)
 

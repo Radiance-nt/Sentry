@@ -110,7 +110,7 @@ def crop_global_map_in_FOV(global_map, pose_estimation, cur_odom):
 
     # 发布fov内点云
     header = cur_odom.header
-    header.frame_id = 'map'
+    header.frame_id = 'map_3d'
     publish_point_cloud(pub_submap, header, np.array(global_map_in_FOV.points)[::10])
 
     return global_map_in_FOV
@@ -240,7 +240,7 @@ if __name__ == '__main__':
     # publisher
     pub_pc_in_map = rospy.Publisher('/cur_scan_in_map', PointCloud2, queue_size=1)
     pub_submap = rospy.Publisher('/submap', PointCloud2, queue_size=1)
-    pub_map_to_odom = rospy.Publisher('/map_to_odom', Odometry, queue_size=1)
+    pub_map_to_odom = rospy.Publisher('/map3d_to_odom', Odometry, queue_size=1)
 
     rospy.Subscriber('/cloud_registered', PointCloud2, cb_save_cur_scan, queue_size=1)
     rospy.Subscriber('/Odometry', Odometry, cb_save_cur_odom, queue_size=1)
@@ -264,7 +264,7 @@ if __name__ == '__main__':
     print(initial_pose)
     # 初始化全局地图
     rospy.logwarn('Waiting for global map......')
-    initialize_global_map(rospy.wait_for_message('/map', PointCloud2))
+    initialize_global_map(rospy.wait_for_message('/lidar_map', PointCloud2))
 
     # quat_zeros = tf.transformations.quaternion_from_euler(0.0, 0.0, 0.0)
     xyz_zeros = initial_pose[:3]
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     initial_pose_zeros = PoseWithCovarianceStamped()
     initial_pose_zeros.pose.pose = Pose(Point(*xyz_zeros), Quaternion(*quat_zeros))
     initial_pose_zeros.header.stamp = rospy.Time().now()
-    initial_pose_zeros.header.frame_id = 'map'
+    initial_pose_zeros.header.frame_id = 'map_3d'
     initial_pose = pose_to_mat(initial_pose_zeros)
     # 初始化
     while not initialized:
