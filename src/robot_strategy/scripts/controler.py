@@ -11,28 +11,14 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped
+from config.nav_points import points
+from config.state import State
 
+"""
+TODO: 改为系数乘距离
+"""
 
-from enum import Enum
-
-
-class State(Enum):
-    WAIT = 1
-    NAV_FORWARD = 2
-    NAV_HOME = 3
-    OUT_OF_BULLET = 6
-
-p1 = [
-    25.43716049194336,
-    9.5605181455612183,
-    0.0,
-    0.0,
-    0.0,
-    0.992779931742495,
-    0.1391848154572246,
-]
-
-points = [p1]
+WAIT_TIME = 30
 
 """
 TODO: 在send_control节点中，
@@ -105,6 +91,7 @@ class RobotController:
     """
     导航与回家
     """
+
     def run_nav(self):
         self.allow_nav_ = True
         self.allow_aim_ = True if self.state == State.NAV_FORWARD else False
@@ -140,7 +127,7 @@ class RobotController:
                 self.current_goal = next(self.goals_iter)
                 self.changeState(self.state)
             # 导航超时
-            elif (rospy.Time.now() - start_time).to_sec() > 30:  # 如果导航时间超过30秒
+            elif (rospy.Time.now() - start_time).to_sec() > WAIT_TIME:  # 如果导航时间超过WAIT_TIME秒
                 self.client.cancel_goal()  # 取消导航
                 rospy.loginfo("{%s} Time out", self.state)
                 # 新建导航点
@@ -153,6 +140,7 @@ class RobotController:
     """
     没子弹，走到角落防止被打到
     """
+
     def run_out_of_bullet(self):
         while True:
             pass
@@ -194,7 +182,7 @@ class RobotController:
         goal = MoveBaseGoal()
         goal.target_pose.pose = pose
         goal.target_pose.header.frame_id = 'map'
-        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.header.stamp = rospy.Time.now() - rospy.Duration(0.2)
         self.client.send_goal(goal)
 
 
