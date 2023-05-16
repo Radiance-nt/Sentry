@@ -8,7 +8,7 @@ def main():
     rospy.init_node('dynamic_tf_broadcaster')
 
     br = tf.TransformBroadcaster()
-    rate = rospy.Rate(100.0)
+    rate = rospy.Rate(1000.0)
 
     while not rospy.is_shutdown():
         # Get current configuration values from the parameter server

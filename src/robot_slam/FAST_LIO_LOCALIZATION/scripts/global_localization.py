@@ -9,7 +9,7 @@ import time
 import open3d as o3d
 import rospy
 import ros_numpy
-from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
+from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped, Pose, Point, Quaternion
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2
 import numpy as np
@@ -256,7 +256,9 @@ if __name__ == '__main__':
     #     initial_pose = [0 for i in range(7)]
 
     # print(color)
-    initial_pose = [0 for i in range(7)]
+    # initial_pose = [0 for i in range(7)]
+    # initial_pose = [24.8, 5.07, 0, 0, 0, 0.97, 0.23]
+    initial_pose = [24, 7, 0, 0, 0, 0.707, 0.70]
 
     print(initial_pose)
     # 初始化全局地图
@@ -270,7 +272,30 @@ if __name__ == '__main__':
     initial_pose_zeros = PoseWithCovarianceStamped()
     initial_pose_zeros.pose.pose = Pose(Point(*xyz_zeros), Quaternion(*quat_zeros))
     initial_pose_zeros.header.stamp = rospy.Time().now()
-    initial_pose_zeros.header.frame_id = 'map_3d'
+    initial_pose_zeros.header.frame_id = 'map'
+
+    point_preTransform = PoseStamped()
+    point_preTransform.pose = initial_pose_zeros.pose.pose
+    point_preTransform.header = initial_pose_zeros.header
+
+    tf_listener = tf.TransformListener()
+
+    while not rospy.is_shutdown():
+        try:
+            initial_pose_zeros.header.stamp = rospy.Time().now()
+
+            tf_listener.waitForTransform('map_3d', initial_pose_zeros.header.frame_id, initial_pose_zeros.header.stamp,
+                                         rospy.Duration(3))
+            tf_listener.lookupTransform('map_3d', initial_pose_zeros.header.frame_id, initial_pose_zeros.header.stamp)
+            transformed_pose = tf_listener.transformPose('map_3d', point_preTransform)
+            break
+        except tf.Exception as e:
+            rospy.logerr("Failed to lookup transform from map to map_3d")
+            # print(e)
+            time.sleep(0.2)
+
+    initial_pose_zeros.header = transformed_pose.header
+    initial_pose_zeros.pose.pose = transformed_pose.pose
     initial_pose = pose_to_mat(initial_pose_zeros)
     # 初始化
     while not initialized:
