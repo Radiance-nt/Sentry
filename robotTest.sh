@@ -21,18 +21,18 @@ echo "Start lidar"
 
 tmux new-session -s my-tmux-session1 -n lidar -d
 tmux send-keys -t my-tmux-session1:lidar 'bash lidar.sh' C-m
-sleep .5s
+sleep 3s
 
 echo "Start base"
 tmux new-session -s my-tmux-session2 -n base -d
 tmux send-keys -t my-tmux-session2:base 'bash base.sh' C-m
-sleep .5s
+sleep 1s
 
 echo "Start slam"
 tmux new-session -s my-tmux-session3 -n slam -d
 tmux send-keys -t my-tmux-session3:slam 'bash slam.sh' C-m
 
-sleep .5s
+sleep 1s
 
 echo "Start autoaim"
 tmux new-session -s my-tmux-session4 -n autoaim -d

@@ -279,7 +279,7 @@ if __name__ == '__main__':
     point_preTransform.header = initial_pose_zeros.header
 
     tf_listener = tf.TransformListener()
-
+    retry = 0
     while not rospy.is_shutdown():
         try:
             initial_pose_zeros.header.stamp = rospy.Time().now()
@@ -290,7 +290,9 @@ if __name__ == '__main__':
             transformed_pose = tf_listener.transformPose('map_3d', point_preTransform)
             break
         except tf.Exception as e:
-            rospy.logerr("Failed to lookup transform from map to map_3d")
+            retry += 1
+            if retry > 5:
+                rospy.logerr("Failed to lookup transform from map to map_3d")
             # print(e)
             time.sleep(0.2)
 

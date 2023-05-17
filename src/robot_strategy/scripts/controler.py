@@ -11,14 +11,14 @@ import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped
-from config.nav_points import points
+from config.nav_points import *
 from config.state import State
 
 """
 TODO: 改为系数乘距离
 """
 
-WAIT_TIME = 30
+WAIT_TIME = 15
 
 """
 TODO: 在send_control节点中，
@@ -125,6 +125,7 @@ class RobotController:
                 self.seq_ += 1
                 # 新建导航点
                 self.current_goal = next(self.goals_iter)
+                time.sleep(3)
                 self.changeState(self.state)
             # 导航超时
             elif (rospy.Time.now() - start_time).to_sec() > WAIT_TIME:  # 如果导航时间超过WAIT_TIME秒
@@ -150,7 +151,10 @@ class RobotController:
         if self.health_ < 300 and self.state != State.NAV_HOME:
             self.changeState(State.NAV_HOME)
             rospy.loginfo("[Interrupt] Switch to HOME")
-            # TODO: 更改巡航点为Home
+            # TODO: 这个放在跳转表里会好一些
+            self.goals = points_home
+            self.goals_iter = itertools.cycle(self.goals)
+            self.current_goal = next(self.goals_iter)
             return
 
         if self.bulletNum_ <= 3 and self.state != State.OUT_OF_BULLET:
