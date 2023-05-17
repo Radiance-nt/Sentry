@@ -7,6 +7,3 @@ footprint_padding: 0.2
 
 transform_tolerance: 0.2
 
-observation_sources: point_cloud_sensor
-
-point_cloud_sensor: {sensor_frame: lidar_link, data_type: LaserScan, topic: /scan, marking: true, clearing: true}
