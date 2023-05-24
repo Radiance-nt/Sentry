@@ -17,6 +17,10 @@
 
 
 	<arg name="map" default="$(find fast_lio)/PCD/scans.pcd" />
+
+	<!-- initialpose-->
+	<node pkg="fast_lio_localization" type="publish_initial_pose.py" name="publish_initial_pose" output="screen" />
+
 	<!-- loalization-->
     <node pkg="fast_lio_localization" type="global_localization.py" name="global_localization" output="screen" />
 

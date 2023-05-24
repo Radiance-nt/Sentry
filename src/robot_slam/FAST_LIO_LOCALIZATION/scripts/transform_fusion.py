@@ -15,7 +15,7 @@ import numpy as np
 import rospy
 import tf
 import tf.transformations
-from geometry_msgs.msg import Pose, Point, Quaternion
+from geometry_msgs.msg import Pose, Point, Quaternion, PoseStamped, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 
 cur_odom_to_baselink = None
@@ -33,6 +33,10 @@ def transform_fusion():
     global cur_odom_to_baselink, cur_map_to_odom
 
     br = tf.TransformBroadcaster()
+
+    pose_msg = rospy.wait_for_message('/initialpose', PoseWithCovarianceStamped)
+    initial_pose = pose_to_mat(pose_msg)
+
     while True:
         time.sleep(1 / FREQ_PUB_LOCALIZATION)
 
@@ -41,7 +45,8 @@ def transform_fusion():
         if cur_map_to_odom is not None:
             T_map3d_to_odom = pose_to_mat(cur_map_to_odom)
         else:
-            T_map3d_to_odom = np.eye(4)
+            # T_map3d_to_odom = np.eye(4)
+            T_map3d_to_odom = initial_pose
 
         timestamp = rospy.Time.now() + rospy.Duration(0.3)
         # if cur_map_to_odom is not None:

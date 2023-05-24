@@ -21,6 +21,9 @@
     <node pkg="fast_lio_localization" type="global_localization.py" name="global_localization" output="screen" />
 	<include file="$(find map_tf)/launch/map_tf.launch" />
 
+	<!-- initialpose-->
+	<node pkg="fast_lio_localization" type="publish_initial_pose.py" name="publish_initial_pose" output="screen" />
+
 	<!-- transform  fusion-->
     <node pkg="fast_lio_localization" type="transform_fusion.py" name="transform_fusion" output="screen" />
 
