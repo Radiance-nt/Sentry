@@ -229,7 +229,7 @@ if __name__ == '__main__':
     FOV = 3.14 * 2
 
     # The farthest distance(meters) within FOV
-    FOV_FAR = 70
+    FOV_FAR = 10
 
     rospy.init_node('fast_lio_localization')
     rospy.loginfo('Localization Node Inited...')
@@ -242,68 +242,16 @@ if __name__ == '__main__':
     rospy.Subscriber('/cloud_registered', PointCloud2, cb_save_cur_scan, queue_size=1)
     rospy.Subscriber('/Odometry', Odometry, cb_save_cur_odom, queue_size=1)
 
-    # while True:
-    #     rospy.logwarn('Waiting for color params...')
-    #     if rospy.has_param('/color'):
-    #         # 获取参数值
-    #         color = rospy.get_param('/color')
-    #         break
-    # if color == "blue":
-    #     initial_pose = initial_pose_blue
-    # elif color == "red":
-    #     initial_pose = initial_pose_red
-    # else:
-    #     initial_pose = [0 for i in range(7)]
-
-    # print(color)
-    # initial_pose = [0 for i in range(7)]
-    # initial_pose = [24.8, 5.07, 0, 0, 0, 0.97, 0.23]
-    initial_pose = [24, 7, 0, 0, 0, 0.707, 0.70]
-
-    print(initial_pose)
     # 初始化全局地图
     rospy.logwarn('Waiting for global map......')
     initialize_global_map(rospy.wait_for_message('/lidar_map', PointCloud2))
 
-    # quat_zeros = tf.transformations.quaternion_from_euler(0.0, 0.0, 0.0)
-    xyz_zeros = initial_pose[:3]
-    quat_zeros = initial_pose[3:]
-
-    initial_pose_zeros = PoseWithCovarianceStamped()
-    initial_pose_zeros.pose.pose = Pose(Point(*xyz_zeros), Quaternion(*quat_zeros))
-    initial_pose_zeros.header.stamp = rospy.Time().now()
-    initial_pose_zeros.header.frame_id = 'map'
-
-    point_preTransform = PoseStamped()
-    point_preTransform.pose = initial_pose_zeros.pose.pose
-    point_preTransform.header = initial_pose_zeros.header
-
-    tf_listener = tf.TransformListener()
-    retry = 0
-    while not rospy.is_shutdown():
-        try:
-            initial_pose_zeros.header.stamp = rospy.Time().now()
-
-            tf_listener.waitForTransform('map_3d', initial_pose_zeros.header.frame_id, initial_pose_zeros.header.stamp,
-                                         rospy.Duration(3))
-            tf_listener.lookupTransform('map_3d', initial_pose_zeros.header.frame_id, initial_pose_zeros.header.stamp)
-            transformed_pose = tf_listener.transformPose('map_3d', point_preTransform)
-            break
-        except tf.Exception as e:
-            retry += 1
-            if retry > 5:
-                rospy.logerr("Failed to lookup transform from map to map_3d")
-            # print(e)
-            time.sleep(0.2)
-
-    initial_pose_zeros.header = transformed_pose.header
-    initial_pose_zeros.pose.pose = transformed_pose.pose
-    initial_pose = pose_to_mat(initial_pose_zeros)
+    # 等待初始位姿
+    pose_msg = rospy.wait_for_message('/initialpose', PoseWithCovarianceStamped)
+    initial_pose = pose_to_mat(pose_msg)
     # 初始化
     while not initialized:
         rospy.logwarn('Waiting for initial pose....')
-
-        # 等待初始位姿
 
         if cur_scan:
             initialized = global_localization(initial_pose)
