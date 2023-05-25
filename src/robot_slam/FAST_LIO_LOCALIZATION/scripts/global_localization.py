@@ -24,7 +24,7 @@ initialized = False
 T_map_to_odom = np.eye(4)
 cur_odom = None
 cur_scan = None
-
+init_try = 0
 
 def pose_to_mat(pose_msg):
     return np.matmul(
@@ -117,10 +117,14 @@ def crop_global_map_in_FOV(global_map, pose_estimation, cur_odom):
 
 
 def global_localization(pose_estimation):
-    global global_map, cur_scan, cur_odom, T_map_to_odom
+    global global_map, cur_scan, cur_odom, T_map_to_odom, init_try
     # 用icp配准
     # print(global_map, cur_scan, T_map_to_odom)
     # rospy.loginfo('Global localization by scan-to-map matching......')
+    if init_try > 20:
+        rospy.logwarn('Tried to initialize for too many times, cancel initialization!')
+        rospy.logwarn('Publish default tf!')
+        return False
 
     # TODO 这里注意线程安全
     scan_tobe_mapped = copy.copy(cur_scan)
@@ -157,6 +161,7 @@ def global_localization(pose_estimation):
         rospy.logwarn('Not match!!!!')
         rospy.logwarn('{}'.format(transformation))
         rospy.logwarn('fitness score:{}'.format(fitness))
+        init_try += 1
         return False
 
 
@@ -210,12 +215,6 @@ def thread_localization():
         global_localization(T_map_to_odom)
 
 
-# blue
-initial_pose_blue = [0.108475046, -0.101065719127655, 0,
-                     0, 0, 0.07605727, 0.9978]
-# red
-initial_pose_red = [5.50629072, 1.18229378, 0,
-                    0, 0, -0.997402, 0.07203457]
 
 if __name__ == '__main__':
     MAP_VOXEL_SIZE = 0.4
@@ -232,7 +231,7 @@ if __name__ == '__main__':
     FOV = 3.14 * 2
 
     # The farthest distance(meters) within FOV
-    FOV_FAR = 10
+    FOV_FAR = 7
 
     rospy.init_node('fast_lio_localization')
     rospy.loginfo('Localization Node Inited...')
