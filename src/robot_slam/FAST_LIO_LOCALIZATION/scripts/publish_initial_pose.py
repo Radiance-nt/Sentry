@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # initial_pose.header.stamp = rospy.Time().now()
     # initial_pose.header.frame_id = 'map_3d'
 
-    initial_pose = [20, 8, 0, 0, 0, 0.707, 0.70]
+    initial_pose = [24, 7, 0, 0, 0, 0.707, 0.70]
     print(initial_pose)
     count = 0
 
