@@ -1,4 +1,23 @@
 
+## 自动哨兵
+
+仿真地图来源[湖北工业大学力创RM关于哨兵的工作开源](https://github.com/HBUTHUANGPX/Hbut_LC_sentry)，
+车体来源[NEUQ RM SI战队项目开源](https://github.com/bkxcyu/neuq_gazebo_rm)。
+
+分支说明：
+- `main`分支为仿真分支, 环境`ubuntu20.04, ros noetic`。
+- `nuc`分支为实机分支, 环境`ubuntu18.04, ros melodic`。
+
+
+
+### 仿真内容展示
+
+<img src="avatar/pic_general.png">
+
+<img src="avatar/pic_rviz.png">
+
+<img src="avatar/rosgraph.svg">
+
 
 ### 运行机器人程序 (on NUC)
 
